@@ -293,6 +293,7 @@
 				</executions>
 				<configuration>
 					<arguments>-Xfluent-api</arguments>
+					<bindingFiles>bindings.xjb</bindingFiles>
 				</configuration>
 			</plugin>
 		</plugins>
