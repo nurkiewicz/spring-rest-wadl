@@ -46,5 +46,3 @@ class ReviewController @Autowired()(reviewService: ReviewService) {
 	}
 }
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
-class NotFoundException extends RuntimeException

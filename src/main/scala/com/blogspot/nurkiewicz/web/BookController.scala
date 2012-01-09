@@ -49,6 +49,3 @@ class BookController @Autowired()(bookService: BookService) {
 		bookService.deleteBy(id)
 	}
 }
-
-@ResponseStatus(HttpStatus.NOT_FOUND)
-class NotFoundException extends RuntimeException
