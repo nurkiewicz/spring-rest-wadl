@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping
 import scala.collection.JavaConversions._
 import net.java.dev.wadl._2009._02._
+import net.java.dev.wadl._2009._02.WadlParamStyle._
 import javax.servlet.http.HttpServletRequest
 
 /**
@@ -16,32 +17,74 @@ import javax.servlet.http.HttpServletRequest
 @Controller
 class WadlController @Autowired()(mapping: RequestMappingHandlerMapping) {
 
+	def param(name: String, style: WadlParamStyle) =
+		new WadlParam().
+				withName(name).
+				withStyle(style)
+
 	@RequestMapping(value = Array("/"), method = Array(GET))
 	@ResponseBody def generate(request: HttpServletRequest) = {
 
 		val methods = for (mappingInfo <- mapping.getHandlerMethods.keys;
 		                   method <- mappingInfo.getMethodsCondition.getMethods;
 		                   pattern <- mappingInfo.getPatternsCondition.getPatterns)
-			yield (pattern, method)
-		methods.groupBy(_._1).collect({case (k, v) => (k, v.map(_._2))}).toSeq.sortBy(_._1.size) foreach println
+		yield (pattern, method)
+		methods.groupBy(_._1).collect({
+			case (k, v) => (k, v.map(_._2))
+		}).toSeq.sortBy(_._1.size) foreach println
 
-		val application = new WadlApplication
-		val wadlResources = new WadlResources
-		wadlResources.setBase(request.getRequestURL.toString)
-		val wadlResource = new WadlResource
-		val wadlMethod = new WadlMethod
-		wadlMethod.setName("GET")
-		val wadlRequest = new WadlRequest
-		val wadlParam = new WadlParam()
-		wadlParam.setName("page")
-		wadlRequest.getParam += wadlParam
-		wadlMethod.setRequest(wadlRequest)
-		wadlResource.getMethodOrResource += wadlMethod
-		wadlResource.setPath("/book")
-		wadlResources.getResource += wadlResource
-		application.getResources += wadlResources
-		application
+		new WadlApplication().
+				withResources(
+			new WadlResources().
+					withBase(request.getRequestURL.toString).
+					withResource(
+				new WadlResource().
+						withPath("book")
+						withMethodOrResource(
+						new WadlMethod().
+								withName("GET").
+								withRequest(
+							new WadlRequest().
+									withParam(
+								param("page", QUERY), param("max", QUERY)
+							)
+						),
+						new WadlMethod().
+								withName("POST"),
+						new WadlResource().
+								withPath("/{id}")
+								withMethodOrResource(
+								new WadlMethod().
+										withName("GET").
+										withRequest(
+									new WadlRequest().
+											withParam(
+										param("id", TEMPLATE)
+									)
+								),
+								new WadlMethod().
+										withName("PUT"),
+								new WadlMethod().
+										withName("DELETE")
+								)
+
+						),
+				new WadlResource().
+						withPath("reader")
+						withMethodOrResource(
+						new WadlMethod().
+								withName("GET").
+								withRequest(
+							new WadlRequest().
+									withParam(param("page", QUERY), param("max", QUERY)
+							)
+						),
+						new WadlMethod().
+								withName("POST"),
+						)
+
+			)
+		)
 	}
-
 
 }
