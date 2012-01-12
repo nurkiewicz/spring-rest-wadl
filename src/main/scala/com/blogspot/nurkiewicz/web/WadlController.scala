@@ -67,7 +67,6 @@ class WadlController @Autowired()(mapping: RequestMappingHandlerMapping) {
 								new WadlMethod().
 										withName("DELETE")
 								)
-
 						),
 				new WadlResource().
 						withPath("reader")
@@ -80,7 +79,7 @@ class WadlController @Autowired()(mapping: RequestMappingHandlerMapping) {
 							)
 						),
 						new WadlMethod().
-								withName("POST"),
+								withName("POST")
 						)
 
 			)
