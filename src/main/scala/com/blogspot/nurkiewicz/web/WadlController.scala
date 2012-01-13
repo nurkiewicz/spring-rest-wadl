@@ -34,6 +34,9 @@ class WadlController @Autowired()(mapping: RequestMappingHandlerMapping) {
 		}).toSeq.sortBy(_._1.size) foreach println
 
 		new WadlApplication().
+				withDoc(
+			new WadlDoc().
+					withTitle("Spring MVC REST appllication")).
 				withResources(
 			new WadlResources().
 					withBase(request.getRequestURL.toString).
@@ -52,21 +55,35 @@ class WadlController @Autowired()(mapping: RequestMappingHandlerMapping) {
 						new WadlMethod().
 								withName("POST"),
 						new WadlResource().
-								withPath("/{id}")
+								withPath("{bookId}").
+								withParam(param("bookId", TEMPLATE)).
 								withMethodOrResource(
-								new WadlMethod().
-										withName("GET").
-										withRequest(
-									new WadlRequest().
-											withParam(
-										param("id", TEMPLATE)
+							new WadlMethod().withName("GET"),
+							new WadlMethod().withName("PUT"),
+							new WadlMethod().withName("DELETE"),
+							new WadlResource().
+									withPath("review")
+									withMethodOrResource(
+									new WadlMethod().
+											withName("GET").
+											withRequest(
+										new WadlRequest().
+												withParam(
+											param("page", QUERY), param("max", QUERY)
+										)
+									),
+									new WadlMethod().
+											withName("POST"),
+									new WadlResource().
+											withPath("{reviewId}").
+											withParam(param("reviewId", TEMPLATE))
+											withMethodOrResource(
+											new WadlMethod().withName("GET"),
+											new WadlMethod().withName("PUT"),
+											new WadlMethod().withName("DELETE")
+											)
 									)
-								),
-								new WadlMethod().
-										withName("PUT"),
-								new WadlMethod().
-										withName("DELETE")
-								)
+						)
 						),
 				new WadlResource().
 						withPath("reader")
