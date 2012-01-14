@@ -294,6 +294,7 @@
 				<configuration>
 					<arguments>-Xfluent-api</arguments>
 					<bindingFiles>bindings.xjb</bindingFiles>
+					<packageName>net.java.dev.wadl</packageName>
 				</configuration>
 			</plugin>
 		</plugins>

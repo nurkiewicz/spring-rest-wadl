@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.{ResponseBody, RequestMapping}
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping
 import scala.collection.JavaConversions._
-import net.java.dev.wadl._2009._02._
-import net.java.dev.wadl._2009._02.WadlParamStyle._
+import net.java.dev.wadl._
+import net.java.dev.wadl.WadlParamStyle._
 import javax.servlet.http.HttpServletRequest
 
 /**
@@ -98,7 +98,6 @@ class WadlController @Autowired()(mapping: RequestMappingHandlerMapping) {
 						new WadlMethod().
 								withName("POST")
 						)
-
 			)
 		)
 	}
