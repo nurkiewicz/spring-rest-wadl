@@ -5,6 +5,7 @@ import java.{io => ji}
 import org.springframework.data.repository.PagingAndSortingRepository
 import java.util.Date
 import javax.persistence._
+import reflect.BeanProperty
 
 /**
  * @author Tomasz Nurkiewicz
@@ -20,10 +21,16 @@ class BorrowedBook(_reader: Reader, _book: Book, var borrowedTime: Date) {
 	var id: jl.Integer = _
 
 	@ManyToOne
+	@BeanProperty
 	var reader = _reader
 
 	@ManyToOne
+	@BeanProperty
 	var book = _book
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@BeanProperty
+	var when = new Date()
 
 }
 

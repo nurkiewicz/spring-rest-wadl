@@ -5,10 +5,10 @@ import javax.xml.bind.annotation.XmlSeeAlso
 import reflect.BeanProperty
 import org.springframework.data.domain.{PageImpl, Page}
 import java.util.{Collections, List}
-import com.blogspot.nurkiewicz.{Review, Book}
+import com.blogspot.nurkiewicz.{Reader, BorrowedBook, Review, Book}
 
 @XmlRootElement
-@XmlSeeAlso(Array(classOf[Book], classOf[Review]))
+@XmlSeeAlso(Array(classOf[Book], classOf[Review], classOf[Reader], classOf[BorrowedBook]))
 class ResultPage[T](@BeanProperty var rows: List[T],
 		             @BeanProperty var page: Int,
 		             @BeanProperty var max: Int,

@@ -4,7 +4,8 @@ import javax.xml.bind.annotation.XmlRootElement
 import reflect.BeanProperty
 import org.springframework.data.repository.PagingAndSortingRepository
 import java.{lang => jl}
-import javax.persistence.{GeneratedValue, Id, Entity}
+import java.util.Date
+import javax.persistence._
 
 /**
  * @author Tomasz Nurkiewicz
@@ -20,6 +21,10 @@ class Reader(@BeanProperty var name: String) {
 	@GeneratedValue
 	@BeanProperty
 	var id = 0
+
+	@Temporal(TemporalType.TIMESTAMP)
+	@BeanProperty
+	var created = new Date()
 
 }
 

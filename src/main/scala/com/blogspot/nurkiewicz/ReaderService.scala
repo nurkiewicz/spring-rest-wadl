@@ -31,4 +31,16 @@ class ReaderService @Autowired() (readerDao: ReaderDao, borrowedBookDao: Borrowe
 		}
 	}
 
+	def findBy(id: Int) = Option(readerDao findOne id)
+
+	def listReaders(page: PageRequest) = readerDao findAll page
+
+	def deleteBy(id: Int) {
+		readerDao delete id
+	}
+
+	def save(reader: Reader) = readerDao save reader
+
+	def update(reader: Reader) = readerDao save reader
+
 }
