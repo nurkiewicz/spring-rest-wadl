@@ -43,7 +43,7 @@ class WadlGenerator(mapping: Map[RequestMappingInfo, HandlerMethod]) {
 
 	def splitUri(uri: String) = uri.split("/").filterNot(_.isEmpty)
 	def cleanUri(uri: String) = splitUri(uri).mkString("/")
-	def parentUri(uri: String) = uri.init.mkString("/")
+	def parentUri(uri: String) = splitUri(uri).init.mkString("/")
 
 	private def buildResource(uri: String, methods: scala.collection.Iterable[MethodWrapper]) = splitUri(uri).lastOption map {sUri =>
 		new WadlResource().
