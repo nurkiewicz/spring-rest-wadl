@@ -15,9 +15,9 @@ import javax.servlet.http.HttpServletRequest
 @Controller
 class WadlController @Autowired()(mapping: RequestMappingHandlerMapping) {
 
-	@RequestMapping(value = Array("/"), method = Array(GET))
+	@RequestMapping(method = Array(GET))
 	@ResponseBody def generate(request: HttpServletRequest) = {
-		new WadlGenerator(mapping.getHandlerMethods.toMap).generate()
+		new WadlGenerator(mapping.getHandlerMethods.toMap, request.getRequestURL.toString).generate()
 	}
 
 }

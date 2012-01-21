@@ -11,7 +11,11 @@ import org.springframework.web.bind.annotation.RequestMethod
  * @since 15.01.12, 18:34
  */
 
-class WadlGenerator(mapping: Map[RequestMappingInfo, HandlerMethod]) {
+class WadlGenerator(
+		                   mapping: Map[RequestMappingInfo, HandlerMethod],
+		                   baseUrl: String,
+		                   methodPostProcessors: List[(WadlMethod, MethodWrapper) => WadlMethod] = WadlMethodPostProcessors.All
+		                   ) {
 
 	def generate() = {
 		val methods = for ((mappingInfo, handlerMethod) <- mapping;
@@ -30,7 +34,7 @@ class WadlGenerator(mapping: Map[RequestMappingInfo, HandlerMethod]) {
 	}
 
 	private def buildHierarchy(resources: Map[String, WadlResource]) = {
-		val root = new WadlResources()
+		val root = new WadlResources().withBase(baseUrl)
 		resources foreach {case(uri, resource) =>
 			resources.get(parentUri(uri)) match {
 				case Some(parent) => parent.getMethodOrResource += resource
@@ -52,12 +56,11 @@ class WadlGenerator(mapping: Map[RequestMappingInfo, HandlerMethod]) {
 	}
 
 
-	private def buildMethod(method: MethodWrapper) = {
-		val javaMethod = method.handlerMethod.getMethod
-		new WadlMethod().
-				withName(method.httpMethod.toString).
-				withId(javaMethod.getDeclaringClass.getName + "." + javaMethod.getName + "/" + method.httpMethod.toString)
-	}
+	private def buildMethod(method: MethodWrapper) =
+		methodPostProcessors.foldLeft(new WadlMethod()) {
+			(curWadlMethod, postProcessorFun) =>
+				postProcessorFun(curWadlMethod, method)
+		}
 
 }
 

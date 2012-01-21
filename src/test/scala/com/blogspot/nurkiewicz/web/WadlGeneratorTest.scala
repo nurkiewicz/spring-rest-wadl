@@ -1,21 +1,29 @@
 package com.blogspot.nurkiewicz.web
 
-import org.scalatest.FunSuite
 import org.scalatest.matchers.ShouldMatchers
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestMethod._
 import org.springframework.web.servlet.mvc.condition._
 import org.springframework.web.method.HandlerMethod
-import collection.JavaConversions._
-import net.java.dev.wadl.{WadlMethod, WadlResource}
+import org.custommonkey.xmlunit.XMLAssert._
+import javax.xml.bind.JAXBContext
+import java.io.StringWriter
+import org.scalatest.{BeforeAndAfterAll, FunSuite}
+import org.custommonkey.xmlunit.XMLUnit
 
 /**
  * @author Tomasz Nurkiewicz
  * @since 16.01.12, 23:15
  */
 
-class WadlGeneratorTest extends FunSuite with ShouldMatchers {
+class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfterAll {
+
+
+	override protected def beforeAll() {
+		super.beforeAll()
+		XMLUnit.setIgnoreWhitespace(true)
+	}
 
 	def mappingInfo(pattern: String, method: RequestMethod): RequestMappingInfo = mappingInfo(List(pattern), List(method))
 	
@@ -31,40 +39,62 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers {
 		)
 	}
 
+	def buildGenerator(mapping: Map[RequestMappingInfo, HandlerMethod]) = new WadlGenerator(mapping, "http://example.com/rest")
+
 	test("should generate empty document when no mappings found") {
 		//given
-		val generator = new WadlGenerator(Map())
+		val generator = buildGenerator(Map())
 
 		//when
-		val resources = wadlResources(generator)
+		val wadl = wadlResources(generator)
 
 		//then
-		resources should have size (0)
+		assertXMLEqual("""
+			<application xmlns="http://wadl.dev.java.net/2009/02">
+				<doc title="Spring MVC REST appllication"/>
+				<resources base="http://example.com/rest"/>
+			</application>
+		""", wadl)
+
 	}
 
 	def wadlResources(generator: WadlGenerator) = {
-		generator.generate().getResources.get(0).getResource.toSeq
+		val output = new StringWriter
+		JAXBContext.
+				newInstance("net.java.dev.wadl").
+				createMarshaller().
+				marshal(generator.generate(), output)
+		println(output)
+		output.toString
 	}
 
 	test("should generate WADL document with single resource and method") {
 		//given
-		val generator = new WadlGenerator(Map(
+		val generator = buildGenerator(Map(
 			mappingInfo("/books", GET) -> handlerMethod("substring")
 		))
 
 		//when
-		val resources = wadlResources(generator)
+		val wadl = wadlResources(generator)
 
 		//then
-		resources should have size (1)
+		/*resources should have size (1)
 		val booksResource = resources(0).asInstanceOf[WadlResource]
 		val getBooks = booksResource.getMethodOrResource.get(0).asInstanceOf[WadlMethod]
 		getBooks.getName should equal ("GET")
-		getBooks.getId should equal ("java.lang.String.substring/GET")
+		getBooks.getId should equal ("java.lang.String.substring/GET")*/
 	}
 	
 	test("should generate WADL with two resources, each having two methods, all pointing to a single method") {
-		
+		val generator = buildGenerator(Map(
+			mappingInfo(List("/books"), List(GET, POST)) -> handlerMethod("substring"),
+			mappingInfo(List("/toys"), List(GET, POST)) -> handlerMethod("indexOf"),
+			mappingInfo("/toys/new", GET) -> handlerMethod("concat")
+		))
+
+		//when
+		val resources = wadlResources(generator)
+		println(resources)
 	}
 	
 	test("should generate WADL with single resource and two methods pointing to two methods") {
