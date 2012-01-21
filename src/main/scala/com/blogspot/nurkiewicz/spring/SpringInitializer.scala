@@ -12,6 +12,7 @@ class SpringInitializer extends WebApplicationInitializer {
 		val dispatcher = container.addServlet("rest", new DispatcherServlet(dispatcherContext))
 		dispatcher.setLoadOnStartup(1)
 		dispatcher.addMapping("/api/*")
+		dispatcher.addMapping("/api")
 	}
 
 	def createDispatcherContext() = {
