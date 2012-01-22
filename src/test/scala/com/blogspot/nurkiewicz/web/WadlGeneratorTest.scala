@@ -374,4 +374,28 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 		""" + wadlFooter, wadl)
 	}
 
+	test("should add controller method parameters as WADL method parameters") {
+		given("")
+		val mapping = Map(
+			mappingInfo("/books", GET) -> handlerMethod("listBooksWithPaging")
+		)
+
+		when("")
+		val wadl = generate(mapping)
+
+		then("")
+		assertXMLEqual(wadlHeader + """
+			<resource path="books">
+				<method name="GET">
+					<doc title="class">com.blogspot.nurkiewicz.web.TestController</doc>
+					<doc title="method">listBooksWithPaging</doc>
+					<request>
+						<param name="page" style="query" required="false" default="1" />
+						<param name="size" style="query" required="false" default="20" />
+					</request>
+				</method>
+			</resource>
+		""" + wadlFooter, wadl)
+	}
+
 }

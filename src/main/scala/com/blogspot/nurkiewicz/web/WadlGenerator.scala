@@ -6,6 +6,7 @@ import org.springframework.web.method.HandlerMethod
 import collection.JavaConversions._
 import org.springframework.web.bind.annotation.RequestMethod
 import collection.immutable.SortedMap
+import collection.immutable
 
 /**
  * @author Tomasz Nurkiewicz
@@ -15,8 +16,8 @@ import collection.immutable.SortedMap
 class WadlGenerator(
 		                   mapping: Map[RequestMappingInfo, HandlerMethod],
 		                   baseUrl: String,
-		                   methodPostProcessors: Seq[(WadlMethod, MethodWrapper) => WadlMethod] = WadlMethodPostProcessors.All,
-		                   resourcePostProcessors: Seq[WadlResource => WadlResource] = WadlResourcePostProcessors.All
+		                   methodPostProcessors: immutable.Seq[(WadlMethod, MethodWrapper) => WadlMethod] = WadlMethodPostProcessors.All,
+		                   resourcePostProcessors: immutable.Seq[WadlResource => WadlResource] = WadlResourcePostProcessors.All
 		                   ) {
 
 	def generate() = {

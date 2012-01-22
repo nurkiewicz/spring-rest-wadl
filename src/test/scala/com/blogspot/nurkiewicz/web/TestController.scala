@@ -2,7 +2,7 @@ package com.blogspot.nurkiewicz.web
 
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMethod._
-import org.springframework.web.bind.annotation.{PathVariable, ResponseBody, RequestMapping}
+import org.springframework.web.bind.annotation.{RequestParam, PathVariable, ResponseBody, RequestMapping}
 
 /**
  * @author Tomasz Nurkiewicz
@@ -13,6 +13,11 @@ class TestController {
 
 	@RequestMapping(value = Array("/books"), method = Array(GET))
 	@ResponseBody def listBooks() = ""
+
+	@RequestMapping(value = Array("/books"), method = Array(GET))
+	@ResponseBody def listBooksWithPaging(
+			                               @RequestParam(value = "page", required = false, defaultValue = "1") page: Int,
+			                               @RequestParam(value = "size", required = false, defaultValue = "20") size: Int) = ""
 
 	@RequestMapping(value = Array("/books/{bookId}"), method = Array(GET))
 	@ResponseBody def readBook(@PathVariable("bookId") bookId: Int) = ""
