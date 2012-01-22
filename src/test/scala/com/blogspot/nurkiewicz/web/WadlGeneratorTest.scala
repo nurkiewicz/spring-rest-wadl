@@ -271,6 +271,25 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 	}
 
 	test("should create intermediate resources if not existing") {
+		given("")
+		val mapping = Map(
+			mappingInfo("/books/reviews", GET) -> handlerMethod("listAllReviews")
+		)
+
+		when("")
+		val wadl = generate(mapping)
+
+		then("")
+		assertXMLEqual(wadlHeader + """
+			<resource path="books">
+				<resource path="reviews">
+					<method name="GET">
+						<doc title="class">com.blogspot.nurkiewicz.web.TestController</doc>
+						<doc title="method">listAllReviews</doc>
+					</method>
+				</resource>
+			</resource>
+		""" + wadlFooter, wadl)
 	}
 	
 	test("should add parameter info for template parameter in URL") {
