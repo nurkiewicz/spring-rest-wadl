@@ -39,7 +39,9 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 		)
 	}
 
-	private def method(name: String) = classOf[TestController].getMethods.find(_.getName == name).get
+	private def method(name: String) = classOf[TestController].getMethods.find(_.getName == name).getOrElse{
+		throw new NoSuchElementException(name)
+	}
 
 	private def handlerMethod(name: String): HandlerMethod = new HandlerMethod(new Object(), method(name))
 
@@ -192,7 +194,7 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 		given("")
 		val mapping = Map(
 			mappingInfo("/books", GET) -> handlerMethod("listBooks"),
-			mappingInfo("/books/reviews", GET) -> handlerMethod("listReviews")
+			mappingInfo("/books/reviews", GET) -> handlerMethod("listAllReviews")
 		)
 
 		when("")
@@ -204,7 +206,7 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 				<resource path="reviews">
 					<method name="GET">
 						<doc title="class">com.blogspot.nurkiewicz.web.TestController</doc>
-						<doc title="method">listReviews</doc>
+						<doc title="method">listAllReviews</doc>
 					</method>
 				</resource>
 				<method name="GET">
@@ -219,7 +221,7 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 		given("")
 		val mapping = Map(
 			mappingInfo("/books", GET) -> handlerMethod("listBooks"),
-			mappingInfo("/books/reviews", GET) -> handlerMethod("listReviews"),
+			mappingInfo("/books/reviews", GET) -> handlerMethod("listAllReviews"),
 			mappingInfo("/readers", GET) -> handlerMethod("listReaders"),
 			mappingInfo("/readers/active", GET) -> handlerMethod("listActiveReviews"),
 			mappingInfo("/readers/passive", GET) -> handlerMethod("listPassiveReviews"),
@@ -239,7 +241,7 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 				<resource path="reviews">
 					<method name="GET">
 						<doc title="class">com.blogspot.nurkiewicz.web.TestController</doc>
-						<doc title="method">listReviews</doc>
+						<doc title="method">listAllReviews</doc>
 					</method>
 				</resource>
 			</resource>
@@ -294,6 +296,79 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 						<doc title="class">com.blogspot.nurkiewicz.web.TestController</doc>
 						<doc title="method">readBook</doc>
 					</method>
+				</resource>
+			</resource>
+		""" + wadlFooter, wadl)
+	}
+
+	test("should add parameters description for every template variable found in nested URL") {
+		given("")
+		val mapping = Map(
+			mappingInfo("/books", GET) -> handlerMethod("listBooks"),
+			mappingInfo("/books/{bookId}", GET) -> handlerMethod("readBook"),
+			mappingInfo("/books/{bookId}", DELETE) -> handlerMethod("deleteBook"),
+			mappingInfo("/books/{bookId}/reviews", GET) -> handlerMethod("listBookReviews"),
+			mappingInfo("/books/{bookId}/reviews/{reviewId}", GET) -> handlerMethod("readBookReview"),
+			mappingInfo("/books/{bookId}/reviews/{reviewId}", DELETE) -> handlerMethod("deleteBookReview"),
+			mappingInfo("/books/{bookId}/reviews/{reviewId}/comments", GET) -> handlerMethod("listBookReviewComments"),
+			mappingInfo("/books/{bookId}/reviews/{reviewId}/comments/{commentId}", GET) -> handlerMethod("readReviewComment"),
+			mappingInfo("/books/{bookId}/reviews/{reviewId}/comments/{commentId}", DELETE) -> handlerMethod("deleteReviewComment")
+		)
+
+		when("")
+		val wadl = generate(mapping)
+
+		then("")
+		assertXMLEqual(wadlHeader + """
+			<resource path="books">
+				<method name="GET">
+					<doc title="class">com.blogspot.nurkiewicz.web.TestController</doc>
+					<doc title="method">listBooks</doc>
+				</method>
+				<resource path="{bookId}">
+					<param name="bookId" style="template" required="true" />
+					<method name="DELETE">
+						<doc title="class">com.blogspot.nurkiewicz.web.TestController</doc>
+						<doc title="method">deleteBook</doc>
+					</method>
+					<method name="GET">
+						<doc title="class">com.blogspot.nurkiewicz.web.TestController</doc>
+						<doc title="method">readBook</doc>
+					</method>
+					<resource path="reviews">
+						<method name="GET">
+							<doc title="class">com.blogspot.nurkiewicz.web.TestController</doc>
+							<doc title="method">listBookReviews</doc>
+						</method>
+						<resource path="{reviewId}">
+							<param name="reviewId" style="template" required="true" />
+							<method name="DELETE">
+								<doc title="class">com.blogspot.nurkiewicz.web.TestController</doc>
+								<doc title="method">deleteBookReview</doc>
+							</method>
+							<method name="GET">
+								<doc title="class">com.blogspot.nurkiewicz.web.TestController</doc>
+								<doc title="method">readBookReview</doc>
+							</method>
+							<resource path="comments">
+								<method name="GET">
+									<doc title="class">com.blogspot.nurkiewicz.web.TestController</doc>
+									<doc title="method">listBookReviewComments</doc>
+								</method>
+								<resource path="{commentId}">
+									<param name="commentId" style="template" required="true" />
+									<method name="DELETE">
+										<doc title="class">com.blogspot.nurkiewicz.web.TestController</doc>
+										<doc title="method">deleteReviewComment</doc>
+									</method>
+									<method name="GET">
+										<doc title="class">com.blogspot.nurkiewicz.web.TestController</doc>
+										<doc title="method">readReviewComment</doc>
+									</method>
+								</resource>
+							</resource>
+						</resource>
+					</resource>
 				</resource>
 			</resource>
 		""" + wadlFooter, wadl)

@@ -17,8 +17,29 @@ class TestController {
 	@RequestMapping(value = Array("/books/{bookId}"), method = Array(GET))
 	@ResponseBody def readBook(@PathVariable("bookId") bookId: Int) = ""
 
+	@RequestMapping(value = Array("/books/{bookId}"), method = Array(DELETE))
+	@ResponseBody def deleteBook(@PathVariable("deleteId") bookId: Int) = ""
+
 	@RequestMapping(value = Array("/books/reviews"), method = Array(GET))
-	@ResponseBody def listReviews() = ""
+	@ResponseBody def listAllReviews() = ""
+
+	@RequestMapping(value = Array("/books/{bookId}/reviews"), method = Array(GET))
+	@ResponseBody def listBookReviews(@PathVariable("bookId") bookId: Int) = ""
+
+	@RequestMapping(value = Array("/books/{bookId}/reviews/{reviewId}"), method = Array(GET))
+	@ResponseBody def readBookReview(@PathVariable("bookId") bookId: Int, @PathVariable("reviewId") reviewId: Int) = ""
+
+	@RequestMapping(value = Array("/books/{bookId}/reviews/{reviewId}"), method = Array(DELETE))
+	@ResponseBody def deleteBookReview(@PathVariable("bookId") bookId: Int, @PathVariable("reviewId") reviewId: Int) = ""
+
+	@RequestMapping(value = Array("/books/{bookId}/reviews/{reviewId}/comments"), method = Array(GET))
+	@ResponseBody def listBookReviewComments(@PathVariable("bookId") bookId: Int, @PathVariable("reviewId") reviewId: Int) = ""
+
+	@RequestMapping(value = Array("/books/{bookId}/reviews/{reviewId}/comments/{commentId}"), method = Array(GET))
+	@ResponseBody def readReviewComment(@PathVariable("bookId") bookId: Int, @PathVariable("reviewId") reviewId: Int, @PathVariable("commentId") commentId: Int) = ""
+
+	@RequestMapping(value = Array("/books/{bookId}/reviews/{reviewId}/comments/{commentId}"), method = Array(DELETE))
+	@ResponseBody def deleteReviewComment(@PathVariable("bookId") bookId: Int, @PathVariable("reviewId") reviewId: Int, @PathVariable("commentId") commentId: Int) = ""
 
 	@RequestMapping(value = Array("/books"), method = Array(POST))
 	@ResponseBody def createBook() = ""
