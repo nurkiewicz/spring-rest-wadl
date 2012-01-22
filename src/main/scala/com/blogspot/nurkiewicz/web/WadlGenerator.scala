@@ -5,6 +5,7 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo
 import org.springframework.web.method.HandlerMethod
 import collection.JavaConversions._
 import org.springframework.web.bind.annotation.RequestMethod
+import collection.immutable.SortedMap
 
 /**
  * @author Tomasz Nurkiewicz
@@ -14,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod
 class WadlGenerator(
 		                   mapping: Map[RequestMappingInfo, HandlerMethod],
 		                   baseUrl: String,
-		                   methodPostProcessors: List[(WadlMethod, MethodWrapper) => WadlMethod] = WadlMethodPostProcessors.All
+		                   methodPostProcessors: Seq[(WadlMethod, MethodWrapper) => WadlMethod] = WadlMethodPostProcessors.All,
+		                   resourcePostProcessors: Seq[WadlResource => WadlResource] = WadlResourcePostProcessors.All
 		                   ) {
 
 	def generate() = {
@@ -24,9 +26,9 @@ class WadlGenerator(
 		                    httpMethod <- mappingInfo.getMethodsCondition.getMethods)
 		yield new MethodWrapper(pattern, httpMethod, handlerMethod)
 
-		val resources = methods.groupBy(mw => cleanUri(mw.uri)).map {
-			case (uri, handlers) => (uri, buildResource(uri, handlers).get)
-		}
+		val resources = SortedMap(methods.groupBy(mw => cleanUri(mw.uri)).map {
+			case (uri, handlers) => (uri, buildResource(uri, handlers))
+		}.toSeq: _*)
 
 		new WadlApplication().
 				withDoc(new WadlDoc().withTitle("Spring MVC REST appllication")).
@@ -44,17 +46,19 @@ class WadlGenerator(
 		root
 	}
 
-
 	def splitUri(uri: String) = uri.split("/").filterNot(_.isEmpty)
 	def cleanUri(uri: String) = splitUri(uri).mkString("/")
 	def parentUri(uri: String) = splitUri(uri).init.mkString("/")
 
-	private def buildResource(uri: String, methods: scala.collection.Iterable[MethodWrapper]) = splitUri(uri).lastOption map {sUri =>
-		new WadlResource().
-				withPath(sUri).
-				withMethodOrResource((methods map buildMethod).toSeq: _*)
-	}
-
+	private def buildResource(uri: String, methods: scala.collection.Iterable[MethodWrapper]) = {
+		val resource = new WadlResource().
+				withPath(splitUri(uri).last).
+				withMethodOrResource(methods.map(buildMethod).toSeq.sortBy(_.getName): _*)
+		resourcePostProcessors.foldLeft(resource) {
+			(curWadlResource, postProcessorFun) =>
+				postProcessorFun(curWadlResource)
+		}
+		}
 
 	private def buildMethod(method: MethodWrapper) =
 		methodPostProcessors.foldLeft(new WadlMethod()) {
