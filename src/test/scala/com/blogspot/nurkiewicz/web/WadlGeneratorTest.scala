@@ -270,7 +270,7 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 		""" + wadlFooter, wadl)
 	}
 
-	test("should create intermediate resources if not existing") {
+	ignore("should create intermediate resources if not existing") {
 		given("")
 		val mapping = Map(
 			mappingInfo("/books/reviews", GET) -> handlerMethod("listAllReviews")
@@ -291,6 +291,34 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 			</resource>
 		""" + wadlFooter, wadl)
 	}
+
+	ignore("should create several intermediate resources if not existing") {
+		given("")
+		val mapping = Map(
+			mappingInfo("/books/reviews/verify/{reviewId}", PUT) -> handlerMethod("listAllReviews")
+		)
+
+		when("")
+		val wadl = generate(mapping)
+
+		then("")
+		assertXMLEqual(wadlHeader + """
+			<resource path="books">
+				<resource path="reviews">
+					<resource path="verify">
+						<resource path="{reviewId}">
+							<method name="PUT">
+								<param name="reviewId" style="template" required="true" />
+								<doc title="class">com.blogspot.nurkiewicz.web.TestController</doc>
+								<doc title="method">listAllReviews</doc>
+							</method>
+						</resource>
+					</resource>
+				</resource>
+			</resource>
+		""" + wadlFooter, wadl)
+	}
+
 	
 	test("should add parameter info for template parameter in URL") {
 		given("")
