@@ -20,8 +20,8 @@ import scalaj.collection.Implicits._
 @RequestMapping(value = Array("/readers"))
 class ReaderController @Autowired()(readerService: ReaderService) {
 
-	@RequestMapping(value = Array("/{id}"), method = Array(GET))
-	@ResponseBody def read(@PathVariable("id") id: Int) = readerService.findBy(id).getOrElse(throw new NotFoundException)
+	@RequestMapping(value = Array("/{readerId}"), method = Array(GET))
+	@ResponseBody def read(@PathVariable("readerId") id: Int) = readerService.findBy(id).getOrElse(throw new NotFoundException)
 
 	@RequestMapping(method = Array(GET))
 	@ResponseBody def listReaders(
@@ -29,9 +29,9 @@ class ReaderController @Autowired()(readerService: ReaderService) {
 			                           @RequestParam(value = "max", required = false, defaultValue = "20") max: Int) =
 		new ResultPage(readerService.listReaders(new PageRequest(page - 1, max)))
 
-	@RequestMapping(value = Array("/{id}"), method = Array(PUT))
+	@RequestMapping(value = Array("/{readerId}"), method = Array(PUT))
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	def updateReader(@PathVariable("id") id: Int, @RequestBody reader: Reader) {
+	def updateReader(@PathVariable("readerId") id: Int, @RequestBody reader: Reader) {
 		reader.id = id
 		readerService update reader
 	}
@@ -44,8 +44,8 @@ class ReaderController @Autowired()(readerService: ReaderService) {
 		new ResponseEntity[String](headers, HttpStatus.CREATED)
 	}
 
-	@RequestMapping(value = Array("/{id}"), method = Array(DELETE))
-	@ResponseStatus(HttpStatus.NO_CONTENT) def deleteReader(@PathVariable("id") id: Int) {
+	@RequestMapping(value = Array("/{readerId}"), method = Array(DELETE))
+	@ResponseStatus(HttpStatus.NO_CONTENT) def deleteReader(@PathVariable("readerId") id: Int) {
 		readerService deleteBy id
 	}
 }

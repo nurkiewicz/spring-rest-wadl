@@ -17,8 +17,8 @@ import com.blogspot.nurkiewicz.{BorrowedBook, BorrowedBooksService}
 @RequestMapping(value = Array("/readers/{readerId}/borrowed"))
 class BorrowedBooksController @Autowired()(borrowedBooksService: BorrowedBooksService) {
 
-	@RequestMapping(value = Array("/{id}"), method = Array(GET))
-	@ResponseBody def read(@PathVariable("id") id: Int) = borrowedBooksService.findBy(id).getOrElse(throw new NotFoundException)
+	@RequestMapping(value = Array("/{borrowedId}"), method = Array(GET))
+	@ResponseBody def read(@PathVariable("borrowedId") id: Int) = borrowedBooksService.findBy(id).getOrElse(throw new NotFoundException)
 
 	@RequestMapping(method = Array(GET))
 	@ResponseBody def listBorrowedBooks(
@@ -26,9 +26,9 @@ class BorrowedBooksController @Autowired()(borrowedBooksService: BorrowedBooksSe
 			                           @RequestParam(value = "max", required = false, defaultValue = "20") max: Int) =
 		new ResultPage(borrowedBooksService.listBorrowedBooks(new PageRequest(page - 1, max)))
 
-	@RequestMapping(value = Array("/{id}"), method = Array(PUT))
+	@RequestMapping(value = Array("/{borrowedId}"), method = Array(PUT))
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	def updateBorrowedBook(@PathVariable("id") id: Int, @RequestBody borrowedBook: BorrowedBook) {
+	def updateBorrowedBook(@PathVariable("borrowedId") id: Int, @RequestBody borrowedBook: BorrowedBook) {
 		borrowedBook.id = id
 		borrowedBooksService update borrowedBook
 	}
@@ -39,9 +39,9 @@ class BorrowedBooksController @Autowired()(borrowedBooksService: BorrowedBooksSe
 		borrowedBooksService save borrowedBook
 	}
 
-	@RequestMapping(value = Array("/{id}"), method = Array(DELETE))
+	@RequestMapping(value = Array("/{borrowedId}"), method = Array(DELETE))
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	def deleteBorrowedBook(@PathVariable("id") id: Int) {
+	def deleteBorrowedBook(@PathVariable("borrowedId") id: Int) {
 		borrowedBooksService deleteBy id
 	}
 }
