@@ -1,4 +1,4 @@
-package com.blogspot.nurkiewicz.web
+package com.blogspot.nurkiewicz.springwadl
 
 import org.scalatest.matchers.ShouldMatchers
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo
@@ -26,7 +26,7 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 	}
 
 	def mappingInfo(pattern: String, method: RequestMethod): RequestMappingInfo = mappingInfo(List(pattern), List(method))
-	
+
 	def mappingInfo(patterns: Seq[String], methods: Seq[RequestMethod]): RequestMappingInfo = {
 		new RequestMappingInfo(
 			new PatternsRequestCondition(patterns: _*),
@@ -103,7 +103,7 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 			</resource>
 		""" + wadlFooter, wadl)
 	}
-	
+
 	test("should generate WADL with two resources, each having two methods, all pointing to a single method") {
 		given("")
 		val mapping = Map(
@@ -137,7 +137,7 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 			</resource>
 		""" + wadlFooter, wadl)
 	}
-	
+
 	test("should generate WADL with single resource and two HTTP methods pointing to two request handling methods") {
 		given("")
 		val mapping = Map(
@@ -162,7 +162,7 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 			</resource>
 		""" + wadlFooter, wadl)
 	}
-	
+
 	test("should generate WADL with two resources, each exposing single method") {
 		given("")
 		val mapping = Map(
@@ -189,7 +189,7 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 			</resource>
 		""" + wadlFooter, wadl)
 	}
-	
+
 	test("should generate WADL with nested resource") {
 		given("")
 		val mapping = Map(
@@ -319,7 +319,7 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 		""" + wadlFooter, wadl)
 	}
 
-	
+
 	test("should add parameter info for template parameter in URL") {
 		given("")
 		val mapping = Map(

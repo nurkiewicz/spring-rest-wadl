@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+	<jmxConfigurator />
+
+	<logger name="org" level="INFO"/>
+
+	<root level="ALL">
+		<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+			<encoder>
+				<pattern>%d{HH:mm:ss.SSS} | %-5level | %thread | %logger{1} | %m%n%rEx</pattern>
+			</encoder>
+		</appender>
+	</root>
+</configuration>

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping
 import scala.collection.JavaConversions._
 import javax.servlet.http.HttpServletRequest
+import com.blogspot.nurkiewicz.springwadl.WadlGenerator
 
 /**
  * @author Tomasz Nurkiewicz

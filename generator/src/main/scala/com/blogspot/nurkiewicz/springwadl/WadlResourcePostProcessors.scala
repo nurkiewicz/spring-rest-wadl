@@ -1,4 +1,4 @@
-package com.blogspot.nurkiewicz.web
+package com.blogspot.nurkiewicz.springwadl
 
 import net.java.dev.wadl._
 import net.java.dev.wadl.WadlParamStyle._

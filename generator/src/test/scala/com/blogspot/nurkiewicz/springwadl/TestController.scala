@@ -1,4 +1,4 @@
-package com.blogspot.nurkiewicz.web
+package com.blogspot.nurkiewicz.springwadl
 
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMethod._
