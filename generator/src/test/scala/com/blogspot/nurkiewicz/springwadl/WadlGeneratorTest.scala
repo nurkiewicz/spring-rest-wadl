@@ -18,6 +18,7 @@ import org.scalatest.junit.JUnitRunner
  * @author Tomasz Nurkiewicz
  * @since 16.01.12, 23:15
  */
+@RunWith(classOf[JUnitRunner])
 class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfterAll with GivenWhenThen {
 
 
