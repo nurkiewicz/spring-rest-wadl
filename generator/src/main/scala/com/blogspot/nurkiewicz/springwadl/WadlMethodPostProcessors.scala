@@ -34,8 +34,9 @@ object WadlMethodPostProcessors {
 	def methodParamDesc(wadlMethod: WadlMethod, wrapper: MethodWrapper) = {
 		val javaMethod = wrapper.handlerMethod.getMethod
 		val wadlMethodRequest = Option(wadlMethod.getRequest).getOrElse(new WadlRequest)
-		val parameters = (javaMethod.getParameterTypes zip javaMethod.getParameterAnnotations) map (param => (param._1, param._2.find(_.isInstanceOf[RequestParam]))) collect {case(p, Some(a: RequestParam)) => (p, a)}
-		parameters foreach {case (clazz, rp) =>
+		val paramTypesWithAnnotation = javaMethod.getParameterTypes zip javaMethod.getParameterAnnotations
+		val requestParams = paramTypesWithAnnotation flatMap {case (clazz, annotations) => annotations.map((clazz, _))} collect {case(clazz, reqParAnnot: RequestParam) => (clazz, reqParAnnot)}
+		requestParams foreach {case (clazz, rp) =>
 			wadlMethodRequest.withParam(
 				new WadlParam().
 					withName(rp.value()).
