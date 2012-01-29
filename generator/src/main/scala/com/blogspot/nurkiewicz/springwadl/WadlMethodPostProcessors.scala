@@ -15,21 +15,14 @@ object WadlMethodPostProcessors {
 	def addHttpMethod(wadlMethod: WadlMethod, wrapper: MethodWrapper) =
 		wadlMethod.withName(wrapper.httpMethod.toString)
 
-	def classNameDoc(wadlMethod: WadlMethod, wrapper: MethodWrapper) =
-		wadlMethod.
-			withDoc(
+	def methodNameDoc(wadlMethod: WadlMethod, wrapper: MethodWrapper) = {
+			val method = wrapper.handlerMethod.getMethod
+			wadlMethod.
+					withDoc(
 				new WadlDoc().
-					withTitle("class")
-					withContent(wrapper.handlerMethod.getMethod.getDeclaringClass.getName)
+						withTitle(method.getDeclaringClass.getName + "." + method.getName)
 			)
-
-	def methodNameDoc(wadlMethod: WadlMethod, wrapper: MethodWrapper) =
-		wadlMethod.
-			withDoc(
-				new WadlDoc().
-					withTitle("method")
-					withContent(wrapper.handlerMethod.getMethod.getName)
-			)
+		}
 
 	def methodParamDesc(wadlMethod: WadlMethod, wrapper: MethodWrapper) = {
 		val javaMethod = wrapper.handlerMethod.getMethod
@@ -52,6 +45,6 @@ object WadlMethodPostProcessors {
 		wadlMethod
 	}
 
-	val All = List(addHttpMethod _, classNameDoc _, methodNameDoc _, methodParamDesc _)
+	val All = List(addHttpMethod _, methodNameDoc _, methodParamDesc _)
 
 }

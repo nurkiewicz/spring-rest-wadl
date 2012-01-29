@@ -13,6 +13,7 @@ import javax.xml.bind.{Marshaller, JAXBContext}
 import org.scalatest.{GivenWhenThen, BeforeAndAfterAll, FunSuite}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
+import java.util.Date
 
 /**
  * @author Tomasz Nurkiewicz
@@ -99,8 +100,7 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 		assertXMLEqual(wadlHeader + """
 			<resource path="books">
 				<method name="GET">
-					<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-					<doc title="method">listBooks</doc>
+					<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listBooks"/>
 				</method>
 			</resource>
 		""" + wadlFooter, wadl)
@@ -119,22 +119,18 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 		assertXMLEqual(wadlHeader + """
 			<resource path="books">
 				<method name="DELETE">
-					<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-					<doc title="method">listBooksComplex</doc>
+					<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listBooksComplex"/>
 				</method>
 				<method name="GET">
-					<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-					<doc title="method">listBooksComplex</doc>
+					<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listBooksComplex"/>
 				</method>
 			</resource>
 			<resource path="bookz">
 				<method name="DELETE">
-					<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-					<doc title="method">listBooksComplex</doc>
+					<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listBooksComplex"/>
 				</method>
 				<method name="GET">
-					<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-					<doc title="method">listBooksComplex</doc>
+					<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listBooksComplex"/>
 				</method>
 			</resource>
 		""" + wadlFooter, wadl)
@@ -154,12 +150,10 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 		assertXMLEqual(wadlHeader + """
 			<resource path="books">
 				<method name="GET">
-					<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-					<doc title="method">listBooks</doc>
+					<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listBooks"/>
 				</method>
 				<method name="POST">
-					<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-					<doc title="method">createBook</doc>
+					<doc title="com.blogspot.nurkiewicz.springwadl.TestController.createBook"/>
 				</method>
 			</resource>
 		""" + wadlFooter, wadl)
@@ -179,14 +173,12 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 		assertXMLEqual(wadlHeader + """
 			<resource path="books">
 				<method name="GET">
-					<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-					<doc title="method">listBooks</doc>
+					<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listBooks"/>
 				</method>
 			</resource>
 			<resource path="readers">
 				<method name="GET">
-					<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-					<doc title="method">listReaders</doc>
+					<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listReaders"/>
 				</method>
 			</resource>
 		""" + wadlFooter, wadl)
@@ -207,13 +199,11 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 			<resource path="books">
 				<resource path="reviews">
 					<method name="GET">
-						<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-						<doc title="method">listAllReviews</doc>
+						<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listAllReviews"/>
 					</method>
 				</resource>
 				<method name="GET">
-					<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-					<doc title="method">listBooks</doc>
+					<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listBooks"/>
 				</method>
 			</resource>
 		""" + wadlFooter, wadl)
@@ -237,35 +227,29 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 		assertXMLEqual(wadlHeader + """
 			<resource path="books">
 				<method name="GET">
-					<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-					<doc title="method">listBooks</doc>
+					<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listBooks"/>
 				</method>
 				<resource path="reviews">
 					<method name="GET">
-						<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-						<doc title="method">listAllReviews</doc>
+						<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listAllReviews"/>
 					</method>
 				</resource>
 			</resource>
 			<resource path="readers">
 				<method name="GET">
-					<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-					<doc title="method">listReaders</doc>
+					<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listReaders"/>
 				</method>
 				<resource path="active">
 					<method name="GET">
-						<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-						<doc title="method">listActiveReviews</doc>
+						<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listActiveReviews"/>
 					</method>
 				</resource>
 				<resource path="passive">
 					<method name="DELETE">
-						<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-						<doc title="method">deletePassiveReviews</doc>
+						<doc title="com.blogspot.nurkiewicz.springwadl.TestController.deletePassiveReviews"/>
 					</method>
 					<method name="GET">
-						<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-						<doc title="method">listPassiveReviews</doc>
+						<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listPassiveReviews"/>
 					</method>
 				</resource>
 			</resource>
@@ -286,8 +270,7 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 			<resource path="books">
 				<resource path="reviews">
 					<method name="GET">
-						<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-						<doc title="method">listAllReviews</doc>
+						<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listAllReviews"/>
 					</method>
 				</resource>
 			</resource>
@@ -313,8 +296,7 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 							<param name="reviewId" style="template" required="true" />
 							<resource path="verify">
 								<method name="PUT">
-									<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-									<doc title="method">listAllReviews</doc>
+									<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listAllReviews"/>
 								</method>
 							</resource>
 						</resource>
@@ -341,8 +323,7 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 				<resource path="reviews">
 					<resource path="verify">
 						<method name="PUT">
-							<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-							<doc title="method">createBook</doc>
+							<doc title="com.blogspot.nurkiewicz.springwadl.TestController.createBook"/>
 						</method>
 					</resource>
 				</resource>
@@ -351,16 +332,14 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 				<resource path="votes">
 					<resource path="authorized">
 						<method name="GET">
-							<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-							<doc title="method">readReviewComment</doc>
+							<doc title="com.blogspot.nurkiewicz.springwadl.TestController.readReviewComment"/>
 						</method>
 					</resource>
 				</resource>
 			</resource>
 			<resource path="users">
 				<method name="GET">
-					<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-					<doc title="method">listAllReviews</doc>
+					<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listAllReviews"/>
 				</method>
 			</resource>
 		""" + wadlFooter, wadl)
@@ -382,14 +361,12 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 				<resource path="reviews">
 					<resource path="reject">
 						<method name="PUT">
-							<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-							<doc title="method">deleteBook</doc>
+							<doc title="com.blogspot.nurkiewicz.springwadl.TestController.deleteBook"/>
 						</method>
 					</resource>
 					<resource path="verify">
 						<method name="PUT">
-							<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-							<doc title="method">createBook</doc>
+							<doc title="com.blogspot.nurkiewicz.springwadl.TestController.createBook"/>
 						</method>
 					</resource>
 				</resource>
@@ -411,14 +388,12 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 		assertXMLEqual(wadlHeader + """
 			<resource path="books">
 				<method name="GET">
-					<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-					<doc title="method">listBooks</doc>
+					<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listBooks"/>
 				</method>
 				<resource path="{bookId}">
 					<param name="bookId" style="template" required="true" />
 					<method name="GET">
-						<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-						<doc title="method">readBook</doc>
+						<doc title="com.blogspot.nurkiewicz.springwadl.TestController.readBook"/>
 					</method>
 				</resource>
 			</resource>
@@ -446,48 +421,39 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 		assertXMLEqual(wadlHeader + """
 			<resource path="books">
 				<method name="GET">
-					<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-					<doc title="method">listBooks</doc>
+					<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listBooks"/>
 				</method>
 				<resource path="{bookId}">
 					<param name="bookId" style="template" required="true" />
 					<method name="DELETE">
-						<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-						<doc title="method">deleteBook</doc>
+						<doc title="com.blogspot.nurkiewicz.springwadl.TestController.deleteBook"/>
 					</method>
 					<method name="GET">
-						<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-						<doc title="method">readBook</doc>
+						<doc title="com.blogspot.nurkiewicz.springwadl.TestController.readBook"/>
 					</method>
 					<resource path="reviews">
 						<method name="GET">
-							<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-							<doc title="method">listBookReviews</doc>
+							<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listBookReviews"/>
 						</method>
 						<resource path="{reviewId}">
 							<param name="reviewId" style="template" required="true" />
 							<method name="DELETE">
-								<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-								<doc title="method">deleteBookReview</doc>
+								<doc title="com.blogspot.nurkiewicz.springwadl.TestController.deleteBookReview"/>
 							</method>
 							<method name="GET">
-								<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-								<doc title="method">readBookReview</doc>
+								<doc title="com.blogspot.nurkiewicz.springwadl.TestController.readBookReview"/>
 							</method>
 							<resource path="comments">
 								<method name="GET">
-									<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-									<doc title="method">listBookReviewComments</doc>
+									<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listBookReviewComments"/>
 								</method>
 								<resource path="{commentId}">
 									<param name="commentId" style="template" required="true" />
 									<method name="DELETE">
-										<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-										<doc title="method">deleteReviewComment</doc>
+										<doc title="com.blogspot.nurkiewicz.springwadl.TestController.deleteReviewComment"/>
 									</method>
 									<method name="GET">
-										<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-										<doc title="method">readReviewComment</doc>
+										<doc title="com.blogspot.nurkiewicz.springwadl.TestController.readReviewComment"/>
 									</method>
 								</resource>
 							</resource>
@@ -511,8 +477,7 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 		assertXMLEqual(wadlHeader + """
 			<resource path="books">
 				<method name="GET">
-					<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-					<doc title="method">listBooksWithPaging</doc>
+					<doc title="com.blogspot.nurkiewicz.springwadl.TestController.listBooksWithPaging"/>
 					<request>
 						<param name="page" style="query" required="false" default="1" />
 						<param name="size" style="query" required="false" default="20" />
