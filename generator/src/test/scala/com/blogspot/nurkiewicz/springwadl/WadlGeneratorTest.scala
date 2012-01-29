@@ -272,7 +272,7 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 		""" + wadlFooter, wadl)
 	}
 
-	ignore("should create intermediate resources if not existing") {
+	test("should create intermediate resources if not existing") {
 		given("")
 		val mapping = Map(
 			mappingInfo("/books/reviews", GET) -> handlerMethod("listAllReviews")
@@ -294,10 +294,42 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 		""" + wadlFooter, wadl)
 	}
 
-	ignore("should create several intermediate resources if not existing") {
+	test("should create several intermediate resources if not existing") {
 		given("")
 		val mapping = Map(
-			mappingInfo("/books/reviews/verify/{reviewId}", PUT) -> handlerMethod("listAllReviews")
+			mappingInfo("/books/{bookId}/reviews/{reviewId}/verify", PUT) -> handlerMethod("listAllReviews")
+		)
+
+		when("")
+		val wadl = generate(mapping)
+
+		then("")
+		assertXMLEqual(wadlHeader + """
+			<resource path="books">
+				<resource path="{bookId}">
+					<param name="bookId" style="template" required="true" />
+					<resource path="reviews">
+						<resource path="{reviewId}">
+							<param name="reviewId" style="template" required="true" />
+							<resource path="verify">
+								<method name="PUT">
+									<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
+									<doc title="method">listAllReviews</doc>
+								</method>
+							</resource>
+						</resource>
+					</resource>
+				</resource>
+			</resource>
+		""" + wadlFooter, wadl)
+	}
+
+	test("should generate WADL for several resources without ancestors") {
+		given("")
+		val mapping = Map(
+			mappingInfo("/books/reviews/verify", PUT) -> handlerMethod("createBook"),
+			mappingInfo("/users", GET) -> handlerMethod("listAllReviews"),
+			mappingInfo("/readers/votes/authorized", GET) -> handlerMethod("readReviewComment")
 		)
 
 		when("")
@@ -308,19 +340,62 @@ class WadlGeneratorTest extends FunSuite with ShouldMatchers with BeforeAndAfter
 			<resource path="books">
 				<resource path="reviews">
 					<resource path="verify">
-						<resource path="{reviewId}">
-							<method name="PUT">
-								<param name="reviewId" style="template" required="true" />
-								<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
-								<doc title="method">listAllReviews</doc>
-							</method>
-						</resource>
+						<method name="PUT">
+							<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
+							<doc title="method">createBook</doc>
+						</method>
+					</resource>
+				</resource>
+			</resource>
+			<resource path="readers">
+				<resource path="votes">
+					<resource path="authorized">
+						<method name="GET">
+							<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
+							<doc title="method">readReviewComment</doc>
+						</method>
+					</resource>
+				</resource>
+			</resource>
+			<resource path="users">
+				<method name="GET">
+					<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
+					<doc title="method">listAllReviews</doc>
+				</method>
+			</resource>
+		""" + wadlFooter, wadl)
+	}
+
+	test("should generate WADL for several resources without ancestors but with common parent") {
+		given("")
+		val mapping = Map(
+			mappingInfo("/books/reviews/verify", PUT) -> handlerMethod("createBook"),
+			mappingInfo("/books/reviews/reject", PUT) -> handlerMethod("deleteBook")
+		)
+
+		when("")
+		val wadl = generate(mapping)
+
+		then("")
+		assertXMLEqual(wadlHeader + """
+			<resource path="books">
+				<resource path="reviews">
+					<resource path="reject">
+						<method name="PUT">
+							<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
+							<doc title="method">deleteBook</doc>
+						</method>
+					</resource>
+					<resource path="verify">
+						<method name="PUT">
+							<doc title="class">com.blogspot.nurkiewicz.springwadl.TestController</doc>
+							<doc title="method">createBook</doc>
+						</method>
 					</resource>
 				</resource>
 			</resource>
 		""" + wadlFooter, wadl)
 	}
-
 
 	test("should add parameter info for template parameter in URL") {
 		given("")

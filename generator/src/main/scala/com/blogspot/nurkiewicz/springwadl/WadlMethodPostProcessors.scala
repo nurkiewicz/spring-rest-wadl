@@ -35,7 +35,9 @@ object WadlMethodPostProcessors {
 		val javaMethod = wrapper.handlerMethod.getMethod
 		val wadlMethodRequest = Option(wadlMethod.getRequest).getOrElse(new WadlRequest)
 		val paramTypesWithAnnotation = javaMethod.getParameterTypes zip javaMethod.getParameterAnnotations
-		val requestParams = paramTypesWithAnnotation flatMap {case (clazz, annotations) => annotations.map((clazz, _))} collect {case(clazz, reqParAnnot: RequestParam) => (clazz, reqParAnnot)}
+		val requestParams = paramTypesWithAnnotation flatMap {
+			case (clazz, annotations) => annotations.map((clazz, _))} collect {case(clazz, reqParAnnot: RequestParam) => (clazz, reqParAnnot)
+		}
 		requestParams foreach {case (clazz, rp) =>
 			wadlMethodRequest.withParam(
 				new WadlParam().
