@@ -21,6 +21,9 @@ class WadlGenerator(
 		                   resourcePostProcessors: immutable.Seq[WadlResource => WadlResource] = WadlResourcePostProcessors.All
 		                   ) {
 
+   // init WadlGenerator from java
+   	def this(mapping: ju.Map[RequestMappingInfo, HandlerMethod], baseUrl: String) = this(mapping.toMap, baseUrl)
+
 	def generate() = {
 		val methods = for ((mappingInfo, handlerMethod) <- mapping;
 		                    pattern <- mappingInfo.getPatternsCondition.getPatterns;
